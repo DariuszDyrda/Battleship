@@ -23,6 +23,7 @@ export default class GameService {
 
     private mapKey = {
         empty: ' ',
+        hitMissed: '-',
         ship: 'x',
         hitShip: 'o',
         edge: 'e' // marks the border of the ship, helps to generate the map
@@ -44,7 +45,7 @@ export default class GameService {
         return GameService.instance;
     }
 
-    public shoot(x : number, y : number) : object {
+    public shoot(x : number, y : number) : any {
         let response = {
             gameOver: false,
             hit: false,
@@ -59,7 +60,8 @@ export default class GameService {
             let gameOver = this.isGameOver();
             return {...response, map: this.map, gameOver, hit: true };
         }
-        return response;
+        this.map[y][x] = this.mapKey.hitMissed;
+        return { ...response, map: this.map };
     }
 
     private generateMap() : void {
@@ -90,6 +92,9 @@ export default class GameService {
 
     public getMap() : String[][] {
         return this.map;
+    }
+    public getStats() : any {
+        return this.stats;
     }
 
     private generateEmptyMap() : void {
