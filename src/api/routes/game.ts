@@ -8,8 +8,8 @@ export default (app) => {
     const gameServiceInstance : GameService = GameService.getInstance();
 
     route.get('/start', (req:Request, res:Response) => {
-        let map = gameServiceInstance.getMap();
-        gameServiceInstance.mapToString();
+        gameServiceInstance.generateMap();
+        let map = gameServiceInstance.getGameMap();
         res.json(map);
     });
     route.post('/shoot', (req:Request, res:Response) => {

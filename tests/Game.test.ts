@@ -7,6 +7,7 @@ describe("Game Service", () => {
     var gameServiceInstance: GameService;
     beforeEach(() => {
         gameServiceInstance = GameService.getInstance();
+        gameServiceInstance.generateMap();
     })
     it('should return generated map', () => {
         let array = gameServiceInstance.getMap();
@@ -55,5 +56,28 @@ describe("Game Service", () => {
 
         let targetsLeftAfterHit = gameServiceInstance.getStats().targetsLeft;
         expect(targetsLeftAfterHit).to.equal(targetsLeft-1);
-    })
+    });
+    it('should return map filled with spaces', () => {
+        let array = gameServiceInstance.getGameMap();
+        expect(array).to.be.a('array');
+        expect(array).to.have.lengthOf(MAP_SIZE);
+        array.forEach(row => {
+            row.forEach(element => {
+                expect(element).to.equal(' ');
+            })
+        })
+    });
+    it('should mark hit ship as o on game map', () => {
+        let x = Math.floor(Math.random() * MAP_SIZE);
+        let y = Math.floor(Math.random() * MAP_SIZE);
+        let gameStatus = null;
+        do {
+            x = Math.floor(Math.random() * MAP_SIZE);
+            y = Math.floor(Math.random() * MAP_SIZE);
+            gameStatus = gameServiceInstance.shoot(x, y);
+        } while(!gameStatus.hit);
+
+        let array = gameServiceInstance.getGameMap();
+        expect(array[y][x]).to.equal('o');
+    });
 })

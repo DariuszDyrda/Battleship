@@ -35,7 +35,6 @@ export default class GameService {
 
     private constructor() {
         this.map =[];
-        this.generateMap();
     }
 
     public static getInstance() : GameService {
@@ -64,7 +63,7 @@ export default class GameService {
         return { ...response, map: this.map };
     }
 
-    private generateMap() : void {
+    public generateMap() : void {
         this.generateEmptyMap();
         this.ships.forEach((ship) => {
             for(let i : number = 0; i < ship.amount; ++i) {
@@ -92,6 +91,16 @@ export default class GameService {
 
     public getMap() : String[][] {
         return this.map;
+    }
+    public getGameMap() : String[][] {
+        return this.map.map((row, y) => {
+            return row.map((element, x) => {
+                if(element === this.mapKey.ship) {
+                    return this.mapKey.empty;
+                }
+                return element;
+            })
+        })
     }
     public getStats() : any {
         return this.stats;
