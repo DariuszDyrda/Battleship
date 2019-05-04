@@ -4,11 +4,10 @@ const route = Router();
 
 export default (app) => {
     app.use('/', route)
-    route.get('/', (req:Request, res:Response) => {
+    route.get('/start', (req:Request, res:Response) => {
         const gameServiceInstance : GameService = GameService.getInstance();
-        gameServiceInstance.GenerateMap();
-        gameServiceInstance.placeShip(5);
+        let map = gameServiceInstance.getMap();
         gameServiceInstance.mapToString();
-        res.send("Hey")
+        res.json(map);
     })
 }

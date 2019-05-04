@@ -22,13 +22,14 @@ export default class GameService {
     private static instance : GameService;
 
     private mapKey = {
-        empty: 'a',
+        empty: ' ',
         ship: 'x',
-        edge: 'e'
+        edge: 'e' // marks the border of the ship, helps to generate the map
     }
 
     private constructor() {
         this.map =[];
+        this.generateMap();
     }
 
     public static getInstance() : GameService {
@@ -38,7 +39,7 @@ export default class GameService {
         return GameService.instance;
     }
 
-    public GenerateMap() : void {
+    private generateMap() : void {
         this.generateEmptyMap();
         this.ships.forEach((ship) => {
             for(let i : number = 0; i < ship.amount; ++i) {
@@ -47,7 +48,8 @@ export default class GameService {
                     success = this.placeShip(ship.size);
                 }
             }
-        })
+        });
+        this.clearBorderMarks();
     }
 
     public getMap() : String[][] {
@@ -63,10 +65,12 @@ export default class GameService {
         }
     }
 
-    public placeShip(shipSize : number) : boolean {
+    private placeShip(shipSize : number) : boolean {
         let x : number = Math.trunc(Math.floor(Math.random() * this.SIZE));
         let y : number = Math.trunc(Math.floor(Math.random() * this.SIZE));
-        let direction : number = 0// Math.trunc(Math.floor(Math.random() * 2)); // 0-vertical, 1-horizontal
+        let direction : number = Math.trunc(Math.floor(Math.random() * 2)); // 0-vertical, 1-horizontal
+
+        console.log(`ATTEMPT x: ${x} y: ${y} SIZE: ${shipSize} DIRECTION: ${direction}`);
 
         switch(direction) {
             case 0: {
@@ -81,7 +85,6 @@ export default class GameService {
                 for(let i : number = y; i < y+shipSize; ++i) {
                     this.map[i][x] = this.mapKey.ship;
                 }
-                console.log(`The ship was places at x: ${x} y: ${y} SIZE: ${shipSize}`);
                 this.drawShipBorder(x, y, shipSize, direction);
                 return true;
 
@@ -103,6 +106,15 @@ export default class GameService {
             }
         }
         return false;
+    }
+    private clearBorderMarks() : void{
+        this.map.forEach((row, y) => {
+            row.forEach((char, x) => {
+                if(char === this.mapKey.edge) {
+                    this.map[y][x] = this.mapKey.empty;
+                }
+            })
+        });
     }
     private drawShipBorder(x : number, y : number, shipSize: number, direction : number) {
         if(direction === 0) {
@@ -138,7 +150,7 @@ export default class GameService {
                 }
                 if(y===0) {
                     this.map[y+1][i] = this.mapKey.edge;
-                } else if(x === this.SIZE-1) {
+                } else if(y === this.SIZE-1) {
                     this.map[y-1][i] = this.mapKey.edge;
                 } else {
                     this.map[y+1][i] = this.mapKey.edge;
