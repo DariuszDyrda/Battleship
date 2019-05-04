@@ -24,7 +24,12 @@ export default class GameService {
     private mapKey = {
         empty: ' ',
         ship: 'x',
+        hitShip: 'o',
         edge: 'e' // marks the border of the ship, helps to generate the map
+    }
+
+    private stats = {
+        targetsLeft: this.calculateTotalTargets(),
     }
 
     private constructor() {
@@ -39,6 +44,24 @@ export default class GameService {
         return GameService.instance;
     }
 
+    public shoot(x : number, y : number) : object {
+        let response = {
+            gameOver: false,
+            hit: false,
+            map: this.map
+        }
+        if(x >= this.SIZE || y >= this.SIZE) {
+            return response;
+        }
+        if(this.map[y][x] === this.mapKey.ship) {
+            this.map[y][x] = this.mapKey.hitShip;
+            this.stats.targetsLeft--;
+            let gameOver = this.isGameOver();
+            return {...response, map: this.map, gameOver, hit: true };
+        }
+        return response;
+    }
+
     private generateMap() : void {
         this.generateEmptyMap();
         this.ships.forEach((ship) => {
@@ -50,6 +73,19 @@ export default class GameService {
             }
         });
         this.clearBorderMarks();
+    }
+
+    private calculateTotalTargets() : number{
+        return this.ships.reduce((prev, current) => {
+            return prev + current.amount;
+        }, 0);
+    }
+
+    private isGameOver() : boolean {
+        if(this.stats.targetsLeft <= 0) {
+            return true;
+        }
+        return false;
     }
 
     public getMap() : String[][] {
