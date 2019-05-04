@@ -13,7 +13,7 @@ export default (app) => {
         res.json(map);
     });
     route.post('/shoot', (req:Request, res:Response) => {
-        let hit : boolean = gameServiceInstance.shoot(req.body.x, req.body.y);
-        res.json({ x: req.body.x, y: req.body.y, hit });
+        let gameStatus : object = gameServiceInstance.shoot(req.body.x, req.body.y);
+        res.json({ gameStatus });
     })
 }
