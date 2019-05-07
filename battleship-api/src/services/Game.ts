@@ -48,7 +48,7 @@ export default class GameService {
         let response = {
             gameOver: false,
             hit: false,
-            map: this.map
+            map: this.getGameMap()
         }
         if(x >= this.SIZE || y >= this.SIZE) {
             return response;
@@ -57,10 +57,12 @@ export default class GameService {
             this.map[y][x] = this.mapKey.hitShip;
             this.stats.targetsLeft--;
             let gameOver = this.isGameOver();
-            return {...response, map: this.map, gameOver, hit: true };
+            return {...response, map: this.getGameMap(), gameOver, hit: true };
         }
-        this.map[y][x] = this.mapKey.hitMissed;
-        return { ...response, map: this.map };
+        if(this.map[y][x] === this.mapKey.empty) {
+            this.map[y][x] = this.mapKey.hitMissed;
+        }
+        return { ...response, map: this.getGameMap() };
     }
 
     public generateMap() : void {
@@ -78,7 +80,7 @@ export default class GameService {
 
     private calculateTotalTargets() : number{
         return this.ships.reduce((prev, current) => {
-            return prev + current.amount;
+            return prev + (current.amount*current.size);
         }, 0);
     }
 
@@ -119,8 +121,6 @@ export default class GameService {
         let x : number = Math.trunc(Math.floor(Math.random() * this.SIZE));
         let y : number = Math.trunc(Math.floor(Math.random() * this.SIZE));
         let direction : number = Math.trunc(Math.floor(Math.random() * 2)); // 0-vertical, 1-horizontal
-
-        console.log(`ATTEMPT x: ${x} y: ${y} SIZE: ${shipSize} DIRECTION: ${direction}`);
 
         switch(direction) {
             case 0: {
