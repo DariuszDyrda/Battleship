@@ -1,0 +1,15 @@
+td {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    margin: 0;
+}
+.ship {
+    background-color: black;
+}
+.empty {
+    background-color: white;
+}
+.missed {
+    background-color: blue;
+}
