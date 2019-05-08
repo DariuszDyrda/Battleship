@@ -60,7 +60,6 @@ export default class GameService {
             let isEntireShipDestroyed = this.isEntireShipDestroyed(x, y);
             if(isEntireShipDestroyed) {
                 let peak = this.findPeakOfHitShip(x, y);
-                console.log(peak);
                 this.drawShipBorder(peak.x, peak.y, peak.direction, this.mapKey.hitMissed, this.mapKey.hitShip);
             }
             return {...response, map: this.getGameMap(), gameOver, hit: true };
@@ -174,7 +173,7 @@ export default class GameService {
     }
     private findPeakOfHitShip(targetX : number, targetY : number) {
         let i = targetX;
-        let direction = 0;
+        let direction = 1;
         while(i-1 >= 0 && this.map[targetY][i-1] === this.mapKey.hitShip) {
             i--;
             direction = 1;
@@ -185,10 +184,10 @@ export default class GameService {
             direction = 0;
         }
         if(i === targetX && j === targetY) {
-            if(this.map[targetY][i+1] === this.mapKey.hitShip) {
+            if(i+1 < this.SIZE && this.map[targetY][i+1] === this.mapKey.hitShip) {
                 direction = 1;
             }
-            if(this.map[j+1][targetX] === this.mapKey.hitShip) {
+            else if(j+1 < this.SIZE && this.map[j+1][targetX] === this.mapKey.hitShip) {
                 direction = 0;
             }
         }
