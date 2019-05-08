@@ -57,6 +57,12 @@ export default class GameService {
             this.map[y][x] = this.mapKey.hitShip;
             this.stats.targetsLeft--;
             let gameOver = this.isGameOver();
+            let isEntireShipDestroyed = this.isEntireShipDestroyed(x, y);
+            if(isEntireShipDestroyed) {
+                let peak = this.findPeakOfHitShip(x, y);
+                console.log(peak);
+                this.drawShipBorder(peak.x, peak.y, peak.direction, this.mapKey.hitMissed, this.mapKey.hitShip);
+            }
             return {...response, map: this.getGameMap(), gameOver, hit: true };
         }
         if(this.map[y][x] === this.mapKey.empty) {
@@ -135,7 +141,7 @@ export default class GameService {
                 for(let i : number = y; i < y+shipSize; ++i) {
                     this.map[i][x] = this.mapKey.ship;
                 }
-                this.drawShipBorder(x, y, shipSize, direction);
+                this.drawShipBorder(x, y, direction, this.mapKey.edge, this.mapKey.ship);
                 return true;
 
             }
@@ -151,7 +157,7 @@ export default class GameService {
                 for(let i : number = x; i < x+shipSize; ++i) {
                     this.map[y][i] = this.mapKey.ship;
                 }
-                this.drawShipBorder(x, y, shipSize, direction);
+                this.drawShipBorder(x, y, direction, this.mapKey.edge, this.mapKey.ship);
                 return true;
             }
         }
@@ -166,52 +172,159 @@ export default class GameService {
             })
         });
     }
-    private drawShipBorder(x : number, y : number, shipSize: number, direction : number) {
+    private findPeakOfHitShip(targetX : number, targetY : number) {
+        let i = targetX;
+        let direction = 0;
+        while(i-1 >= 0 && this.map[targetY][i-1] === this.mapKey.hitShip) {
+            i--;
+            direction = 1;
+        }
+        let j = targetY;
+        while(j-1 >= 0 && this.map[j-1][targetX] === this.mapKey.hitShip) {
+            j--;
+            direction = 0;
+        }
+        if(i === targetX && j === targetY) {
+            if(this.map[targetY][i+1] === this.mapKey.hitShip) {
+                direction = 1;
+            }
+            if(this.map[j+1][targetX] === this.mapKey.hitShip) {
+                direction = 0;
+            }
+        }
+        return {x: i, y: j, direction};
+    }
+    private isEntireShipDestroyed(x : number, y: number) {
+        let gameMap = this.map;
+        let mapKey = this.mapKey;
+        const SIZE = this.SIZE;
+        function isLeftNeighbourAShip() {
+            let i = x;
+            while(i > 0) {
+                if(gameMap[y][i-1] === mapKey.ship) {
+                    return true;
+                }
+                if(gameMap[y][i-1] === mapKey.hitShip) {
+                    i--;
+                }
+                else {
+                return false;
+                }
+            }
+            return false;
+        }
+        function isRightNeighbourAShip() {
+            let i = x;
+            while(i < SIZE-1) {
+                if(gameMap[y][i+1] === mapKey.ship) {
+                    return true;
+                }
+                if(gameMap[y][i+1] === mapKey.hitShip) {
+                    i++;
+                }
+                else {
+                    return false;
+                }
+            }
+            return false;
+        }
+        function isUpNeighbourAShip() {
+            let i = y;
+            while(i > 0) {
+                if(gameMap[i-1][x] === mapKey.ship) {
+                    return true;
+                }
+                if(gameMap[i-1][x] === mapKey.hitShip) {
+                    i--;
+                }
+                else {
+                    return false;
+                }
+            }
+            return false;
+        }
+        function isDownNeighbourAShip() {
+            let i = y;
+            while(i < SIZE-1) {
+                if(gameMap[i+1][x] === mapKey.ship) {
+                    return true;
+                }
+                if(gameMap[i+1][x] === mapKey.hitShip) {
+                    i++;
+                }
+                else {
+                    return false;
+                }
+            }
+            return false;
+        }
+        if(!isLeftNeighbourAShip() && !isRightNeighbourAShip() && !isDownNeighbourAShip() && !isUpNeighbourAShip()) {
+            return true;
+        }
+        return false;
+    }
+    private drawShipBorder(x : number, y : number, direction : number, borderSign : string, shipSign : string) {
         if(direction === 0) {
-            for(let i : number = y-1; i < y+shipSize+1; ++i) {
+            let i = y-1;
+            do {
                 if(i < 0) {
                     i=0;
-                }
-                if(i >= this.SIZE) {
-                    break;
                 }
                 if(x===0) {
-                    this.map[i][x+1] = this.mapKey.edge;
+                    this.map[i][x+1] = borderSign;
                 } else if(x === this.SIZE-1) {
-                    this.map[i][x-1] = this.mapKey.edge;
+                    this.map[i][x-1] = borderSign;
                 } else {
-                    this.map[i][x+1] = this.mapKey.edge;
-                    this.map[i][x-1] = this.mapKey.edge;
+                    this.map[i][x+1] = borderSign;
+                    this.map[i][x-1] = borderSign;
+                }
+                i++;
+            } while(i < this.SIZE && this.map[i][x] === shipSign);
+
+            if(y-1 >= 0) {
+                this.map[y-1][x] = borderSign;
+            }
+            if(i < this.SIZE) {
+                this.map[i][x] = borderSign;
+                if(x===0) {
+                    this.map[i][x+1] = borderSign;
+                } else if(x === this.SIZE-1) {
+                    this.map[i][x-1] = borderSign;
+                } else {
+                    this.map[i][x+1] = borderSign;
+                    this.map[i][x-1] = borderSign;
                 }
             }
-            if(y-1 >= 0) {
-                this.map[y-1][x] = this.mapKey.edge;
-            }
-            if(y+shipSize < this.SIZE) {
-                this.map[y+shipSize][x] = this.mapKey.edge;
-            }
         } else if(direction === 1) {
-            for(let i : number = x-1; i < x+shipSize+1; ++i) {
+            let i = x-1;
+            do {
                 if(i < 0) {
                     i=0;
                 }
-                if(i >= this.SIZE) {
-                    break;
-                }
                 if(y===0) {
-                    this.map[y+1][i] = this.mapKey.edge;
+                    this.map[y+1][i] = borderSign;
                 } else if(y === this.SIZE-1) {
-                    this.map[y-1][i] = this.mapKey.edge;
+                    this.map[y-1][i] = borderSign;
                 } else {
-                    this.map[y+1][i] = this.mapKey.edge;
-                    this.map[y-1][i] = this.mapKey.edge;
+                    this.map[y+1][i] = borderSign;
+                    this.map[y-1][i] = borderSign;
                 }
-            }
+                i++;
+            } while(i < this.SIZE && this.map[y][i] === shipSign);
+
             if(x-1 >= 0) {
-                this.map[y][x-1] = this.mapKey.edge;
+                this.map[y][x-1] = borderSign;
             }
-            if(x+shipSize < this.SIZE) {
-                this.map[y][x+shipSize] = this.mapKey.edge;
+            if(i < this.SIZE) {
+                this.map[y][i] = borderSign;
+                if(y===0) {
+                    this.map[y+1][i] = borderSign;
+                } else if(y === this.SIZE-1) {
+                    this.map[y-1][i] = borderSign;
+                } else {
+                    this.map[y+1][i] = borderSign;
+                    this.map[y-1][i] = borderSign;
+                }
             }
         }
     }
