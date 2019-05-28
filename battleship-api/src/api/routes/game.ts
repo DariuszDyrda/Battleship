@@ -5,9 +5,10 @@ const route = Router();
 export default (app) => {
     app.use('/', route);
 
-    const gameServiceInstance : GameService = new GameService();
+    let gameServiceInstance : GameService = new GameService();
 
     route.get('/start', (req:Request, res:Response) => {
+        gameServiceInstance = new GameService();
         gameServiceInstance.generateMap();
         let map = gameServiceInstance.getGameMap();
         res.json(map);

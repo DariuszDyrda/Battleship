@@ -34,6 +34,7 @@ export default class GameService {
 
     public constructor() {
         this.map =[];
+        this.stats.targetsLeft = this.calculateTotalTargets();
     }
 
     public shoot(x : number, y : number) : any {
