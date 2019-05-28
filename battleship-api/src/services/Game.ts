@@ -42,6 +42,9 @@ export default class GameService {
             hit: false,
             map: this.getGameMap()
         }
+        if(this.isGameOver()) {
+            return { ...response, gameOver: true};
+        }
         if(x >= this.SIZE || y >= this.SIZE) {
             return response;
         }
