@@ -19,7 +19,6 @@ export default class GameService {
         }
     ];
     private map : String[][];
-    private static instance : GameService;
 
     private mapKey = {
         empty: ' ',
@@ -33,15 +32,8 @@ export default class GameService {
         targetsLeft: this.calculateTotalTargets(),
     }
 
-    private constructor() {
+    public constructor() {
         this.map =[];
-    }
-
-    public static getInstance() : GameService {
-        if(!GameService.instance) {
-            GameService.instance = new GameService();
-        }
-        return GameService.instance;
     }
 
     public shoot(x : number, y : number) : any {

@@ -6,7 +6,7 @@ describe("Game Service", () => {
     const MAP_SIZE = 10;
     var gameServiceInstance: GameService;
     beforeEach(() => {
-        gameServiceInstance = GameService.getInstance();
+        gameServiceInstance = new GameService();
         gameServiceInstance.generateMap();
     })
     it('should return generated map', () => {
@@ -43,7 +43,7 @@ describe("Game Service", () => {
         let gameStats = gameServiceInstance.getStats();
         expect(gameStats).to.be.a('object');
         expect(gameStats).to.have.property('targetsLeft');
-        expect(gameStats.targetsLeft).to.equal(10);
+        expect(gameStats.targetsLeft).to.equal(20);
     })
     it('should subtract targetsLeft while hit the ship', () => {
         let targetsLeft = gameServiceInstance.getStats().targetsLeft;
