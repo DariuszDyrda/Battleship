@@ -4,7 +4,7 @@ import Cell from './Cell';
 const API_URL = 'http://localhost:8080'
 const TABLE_SIZE = 10;
 
-export default function Table() {
+export default function Table(props) {
     const [map,setMap] = useFetch(`${API_URL}/start`);
     // const map = [
     //     ['x', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -37,6 +37,7 @@ export default function Table() {
         .then(res => res.json())
         .then(data => {
             setMap(data.gameStatus.map);
+            props.onGameStatusUpdate(data.gameStatus.stats)
         })
         .catch(e => {
             console.log('Error ' + e);

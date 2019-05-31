@@ -41,7 +41,8 @@ export default class GameService {
         let response = {
             gameOver: false,
             hit: false,
-            map: this.getGameMap()
+            map: this.getGameMap(),
+            stats: this.getStats()
         }
         if(this.isGameOver()) {
             return { ...response, gameOver: true};

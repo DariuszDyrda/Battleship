@@ -13,6 +13,10 @@ export default (app) => {
         let map = gameServiceInstance.getGameMap();
         res.json(map);
     });
+    route.get('/stats', (req:Request, res:Response) => {
+        let stats = gameServiceInstance.getStats();
+        res.json(stats);
+    })
     route.post('/shoot', (req:Request, res:Response) => {
         let gameStatus : object = gameServiceInstance.shoot(req.body.x, req.body.y);
         res.json({ gameStatus });
