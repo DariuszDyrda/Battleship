@@ -30,6 +30,7 @@ export default class GameService {
 
     private stats = {
         targetsLeft: this.calculateTotalTargets(),
+        shotsTaken: 0
     }
 
     public constructor() {
@@ -53,6 +54,7 @@ export default class GameService {
         if(this.map[y][x] === this.mapKey.ship) {
             this.map[y][x] = this.mapKey.hitShip;
             this.stats.targetsLeft--;
+            this.stats.shotsTaken++;
             let gameOver = this.isGameOver();
             let isEntireShipDestroyed = this.isEntireShipDestroyed(x, y);
             if(isEntireShipDestroyed) {
@@ -62,6 +64,7 @@ export default class GameService {
             return {...response, map: this.getGameMap(), gameOver, hit: true };
         }
         if(this.map[y][x] === this.mapKey.empty) {
+            this.stats.shotsTaken++;
             this.map[y][x] = this.mapKey.hitMissed;
         }
         return { ...response, map: this.getGameMap() };
