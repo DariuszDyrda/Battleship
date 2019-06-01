@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Cell from './Cell';
 
 const API_URL = 'http://localhost:8080'
 const TABLE_SIZE = 10;
 
 export default function Table(props) {
-    const [map,setMap] = useFetch(`${API_URL}/start`);
+    const map = props.gameMap;
     // const map = [
     //     ['x', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
     //     [' ', ' ', ' ', ' ', ' ', ' ', 'x', 'x', 'x', 'x'],
@@ -36,7 +36,7 @@ export default function Table(props) {
         })
         .then(res => res.json())
         .then(data => {
-            setMap(data.gameStatus.map);
+            props.onMapUpdate(data.gameStatus.map);
             props.onGameStatusUpdate(data.gameStatus.stats)
         })
         .catch(e => {
@@ -44,7 +44,9 @@ export default function Table(props) {
         })
     }
 
+
     let rows = []
+
     map.forEach((row, y) => {
         rows.push(row.map((element, x) => {
             if(element === "o") {
@@ -56,6 +58,7 @@ export default function Table(props) {
             }
         }));
     })
+
     rows = rows.map((row, index) => {
         return (<tr key={index}>
             {row}
@@ -69,18 +72,4 @@ export default function Table(props) {
             </tbody>
         </table>
     )
-}
-
-function useFetch(url) {
-    const [map, setMap] = useState([]);
-
-    async function fetchUrl() {
-        const response = await fetch(url);
-        const json = await response.json();
-        setMap(json);
-      }
-      useEffect(() => {
-        fetchUrl();
-      }, [url]);
-      return [map, setMap];
 }

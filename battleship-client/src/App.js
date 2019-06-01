@@ -7,17 +7,29 @@ const API_URL = 'http://localhost:8080'
 
 function App() {
   const [gameStats, setGameStats] = useFetch(`${API_URL}/stats`);
+  const [map, setMap] = useFetch(`${API_URL}/start`);
 
   function handleGameStatusUpdate(newGameStats) {
     setGameStats(newGameStats);
   }
 
-  console.log(gameStats)
+  function handleMapUpdate(newMap) {
+    setMap(newMap);
+  }
+
+  async function handleNewGameButtonClicked() {
+    const response = await fetch(`${API_URL}/start`);
+    const stats = await fetch(`${API_URL}/stats`);
+    const json = await response.json();
+    const statsJson = await stats.json();
+    setMap(json);
+    setGameStats(statsJson);
+  }
   
   return (
     <div className="App">
-      <Table onGameStatusUpdate={ handleGameStatusUpdate } />
-      <ControlPanel gameStats={ gameStats }/>
+      <Table gameMap={ map } onGameStatusUpdate={ handleGameStatusUpdate } onMapUpdate= { handleMapUpdate } />
+      <ControlPanel gameStats={ gameStats } onNewGameButtonClicked = { handleNewGameButtonClicked }/>
     </div>
   );
 }
