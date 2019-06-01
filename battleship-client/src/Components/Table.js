@@ -37,7 +37,7 @@ export default function Table(props) {
         .then(res => res.json())
         .then(data => {
             props.onMapUpdate(data.gameStatus.map);
-            props.onGameStatusUpdate(data.gameStatus.stats)
+            props.onGameStatusUpdate(data.gameStatus)
         })
         .catch(e => {
             console.log('Error ' + e);

@@ -8,9 +8,11 @@ const API_URL = 'http://localhost:8080'
 function App() {
   const [gameStats, setGameStats] = useFetch(`${API_URL}/stats`);
   const [map, setMap] = useFetch(`${API_URL}/start`);
+  const [gameOver, setGameOver] = useState(false);
 
-  function handleGameStatusUpdate(newGameStats) {
-    setGameStats(newGameStats);
+  function handleGameStatusUpdate(newGameStatus) {
+    setGameStats(newGameStatus.stats);
+    setGameOver(newGameStatus.gameOver);
   }
 
   function handleMapUpdate(newMap) {
@@ -24,12 +26,13 @@ function App() {
     const statsJson = await stats.json();
     setMap(json);
     setGameStats(statsJson);
+    setGameOver(false);
   }
   
   return (
     <div className="App">
       <Table gameMap={ map } onGameStatusUpdate={ handleGameStatusUpdate } onMapUpdate= { handleMapUpdate } />
-      <ControlPanel gameStats={ gameStats } onNewGameButtonClicked = { handleNewGameButtonClicked }/>
+      <ControlPanel gameStats={ gameStats } onNewGameButtonClicked = { handleNewGameButtonClicked } gameOver = { gameOver }/>
     </div>
   );
 }
