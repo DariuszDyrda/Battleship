@@ -1,7 +1,7 @@
 import React from 'react';
 import Cell from './Cell';
 
-const API_URL = 'http://localhost:8080'
+const API_URL = '/api'
 const TABLE_SIZE = 10;
 
 export default function Table(props) {
