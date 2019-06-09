@@ -3,7 +3,7 @@ import Table from './Components/Table';
 import ControlPanel from './Components/ControlPanel'
 import './App.css';
 
-const API_URL = 'http://localhost:8080'
+const API_URL = '/api'
 
 function App() {
   const [gameStats, setGameStats] = useFetch(`${API_URL}/stats`);
