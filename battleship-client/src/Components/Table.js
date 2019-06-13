@@ -36,8 +36,7 @@ export default function Table(props) {
         })
         .then(res => res.json())
         .then(data => {
-            props.onMapUpdate(data.gameStatus.map);
-            props.onGameStatusUpdate(data.gameStatus)
+            props.onUserDataUpdate(data);
         })
         .catch(e => {
             console.log('Error ' + e);
@@ -46,24 +45,26 @@ export default function Table(props) {
 
 
     let rows = []
+    
+    if(map) {
+        Array.prototype.forEach.call(map, (row, y) => {
+            rows.push(row.map((element, x) => {
+                if(element === "o") {
+                    return Cell({class: 'ship', key: (10*x+y), onClick: handleCellClick.bind(this, x, y) });
+                } else if(element === '-') {
+                    return Cell({class: 'missed', key: (10*x+y), onClick: handleCellClick.bind(this, x, y) });
+                } else {
+                    return Cell({ class: 'empty', key: (10*x+y), onClick: handleCellClick.bind(this, x, y) });
+                }
+            }));
+        })
 
-    map.forEach((row, y) => {
-        rows.push(row.map((element, x) => {
-            if(element === "o") {
-                return Cell({class: 'ship', key: (10*x+y), onClick: handleCellClick.bind(this, x, y) });
-            } else if(element === '-') {
-                return Cell({class: 'missed', key: (10*x+y), onClick: handleCellClick.bind(this, x, y) });
-            } else {
-                return Cell({ class: 'empty', key: (10*x+y), onClick: handleCellClick.bind(this, x, y) });
-            }
-        }));
-    })
-
-    rows = rows.map((row, index) => {
-        return (<tr key={index}>
-            {row}
-        </tr>)
-    })
+        rows = rows.map((row, index) => {
+            return (<tr key={index}>
+                {row}
+            </tr>)
+        })
+    }
 
     return (
         <table>
