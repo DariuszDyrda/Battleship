@@ -1,0 +1,25 @@
+version: "3"
+services:
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - '3050:80'
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./battleship-api
+    volumes:
+      - /app/node_modules
+      - ./battleship-api:/usr/src/app
+    command: npm run dev
+  client:
+    volumes:
+      - /battleship-client/node_modules
+      - ./battleship-client/:/usr/src/app
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./battleship-client
+    command: npm start
