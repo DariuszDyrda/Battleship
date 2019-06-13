@@ -21,7 +21,7 @@ export default class Game {
 
         let gameMap = board.toGameMap();
 
-        return { gameMap, stats};
+        return { gameMap, stats };
     }
 
     public shoot(gameId : String, x : number, y : number) : any {
@@ -31,7 +31,6 @@ export default class Game {
         }
         let board = userData.board;
         let stats = userData.stats;
-        let gameMap = board.toGameMap();
         let hit = false;
 
         if(x >= MAP_SIZE || y >= MAP_SIZE) {
@@ -47,26 +46,12 @@ export default class Game {
                 board.drawBoarder(x, y);
             }
             hit = true;
-        } else {
+        } else if(board.isCellEmpty(x, y)) {
             stats.increaseShotsTaken();
             board.markMissedShip(x, y);
         }
+        let gameMap = board.toGameMap();
         return { gameMap, stats, hit };
 
     }
-    
-    // public mapToString() : void {
-    //     let indexes = '  ';
-    //     for(let i : number = 0; i < this.SIZE; ++i) {
-    //         indexes+=`${i} `;
-    //     }
-    //     console.log(indexes);
-    //     this.map.forEach((row : Array<String>, index) => {
-    //         let rowString = `${index} `;
-    //         row.forEach(element => {
-    //             rowString+=`${element} `;
-    //         })
-    //         console.log(rowString);
-    //     });
-    // }
 }

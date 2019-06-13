@@ -149,7 +149,9 @@ export default class Board {
 
     public isShipHit(x : number, y : number) : boolean {
         return (this.map[y][x] === MAP_KEY.ship) ? true : false;
-
+    }
+    public isCellEmpty(x : number, y : number) : boolean {
+        return (this.map[y][x] === MAP_KEY.empty) ? true : false;
     }
     public markHitShip(x : number, y : number) {
         this.map[y][x] = MAP_KEY.hitShip;
