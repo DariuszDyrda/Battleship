@@ -32,6 +32,7 @@ export default class Game {
         let board = userData.board;
         let stats = userData.stats;
         let gameMap = board.toGameMap();
+        let hit = false;
 
         if(x >= MAP_SIZE || y >= MAP_SIZE) {
             return userData;
@@ -45,11 +46,12 @@ export default class Game {
             if(board.isEntireShipDestroyed(x, y)) {
                 board.drawBoarder(x, y);
             }
+            hit = true;
         } else {
             stats.increaseShotsTaken();
             board.markMissedShip(x, y);
         }
-        return { gameMap, stats};
+        return { gameMap, stats, hit };
 
     }
     
