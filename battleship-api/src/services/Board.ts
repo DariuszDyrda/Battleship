@@ -255,7 +255,7 @@ export default class Board {
         }
         return {x: i, y: j, direction};
     }
-    private toGameMap() : String[][] {
+    public toGameMap() : String[][] {
         return this.map.map((row, y) => {
             return row.map((element, x) => {
                 if(element === MAP_KEY.ship) {

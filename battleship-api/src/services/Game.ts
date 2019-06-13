@@ -11,7 +11,7 @@ export default class Game {
         this.usersData = new Map<String, UserData>();
     }
 
-    public startGame(gameId : String) : UserData{
+    public startGame(gameId : String) : object {
         let board = new Board();
         let stats = new Stats();
 
@@ -19,7 +19,9 @@ export default class Game {
 
         this.usersData.set(gameId, userData);
 
-        return userData;
+        let gameMap = board.toGameMap();
+
+        return { gameMap, stats};
     }
 
     public shoot(gameId : String, x : number, y : number) : any {
@@ -29,6 +31,7 @@ export default class Game {
         }
         let board = userData.board;
         let stats = userData.stats;
+        let gameMap = board.toGameMap();
 
         if(x >= MAP_SIZE || y >= MAP_SIZE) {
             return userData;
@@ -46,7 +49,7 @@ export default class Game {
             stats.increaseShotsTaken();
             board.markMissedShip(x, y);
         }
-        return userData;
+        return { gameMap, stats};
 
     }
     
