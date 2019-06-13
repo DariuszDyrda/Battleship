@@ -1,6 +1,5 @@
 import * as express from 'express';
 import config from './config';
-import GameService from './services/Game';
 
 async function startServer() {
 

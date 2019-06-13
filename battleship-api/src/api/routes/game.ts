@@ -5,20 +5,20 @@ const route = Router();
 export default (app) => {
     app.use('/', route);
 
-    let gameServiceInstance : GameService = new GameService();
+    let gameServiceInstance = new GameService();
 
     route.get('/start', (req:Request, res:Response) => {
-        gameServiceInstance = new GameService();
-        gameServiceInstance.generateMap();
-        let map = gameServiceInstance.getGameMap();
-        res.json(map);
+        let userData = {};
+        if(req.sessionID) {
+            userData = gameServiceInstance.startGame(req.sessionID);
+        }
+        res.json(userData);
     });
-    route.get('/stats', (req:Request, res:Response) => {
-        let stats = gameServiceInstance.getStats();
-        res.json(stats);
-    })
     route.post('/shoot', (req:Request, res:Response) => {
-        let gameStatus : object = gameServiceInstance.shoot(req.body.x, req.body.y);
-        res.json({ gameStatus });
+        let userData = {};
+        if(req.sessionID) {
+            userData = gameServiceInstance.shoot(req.sessionID, req.body.x, req.body.y);
+        }
+        res.json(userData);
     })
 }
