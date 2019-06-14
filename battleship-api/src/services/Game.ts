@@ -40,7 +40,9 @@ export default class Game {
         if(board.isShipHit(x, y)) {
             stats.decreaseTargetsLeft();
             stats.increaseShotsTaken();
-            stats.checkGameOver();
+            if(stats.checkGameOver()) {
+                this.gameOver(gameId);
+            }
             board.markHitShip(x, y);
             if(board.isEntireShipDestroyed(x, y)) {
                 board.drawBoarder(x, y);
@@ -53,5 +55,9 @@ export default class Game {
         let gameMap = board.toGameMap();
         return { gameMap, stats, hit };
 
+    }
+
+    private gameOver(gameId : String) {
+        this.usersData.delete(gameId);
     }
 }

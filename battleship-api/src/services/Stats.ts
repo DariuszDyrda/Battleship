@@ -18,9 +18,11 @@ export default class Stats {
         this.shotsTaken++;
     }
 
-    public checkGameOver() : void {
+    public checkGameOver() : boolean {
         if(this.targetsLeft <= 0) {
             this.gameOver = true;
+            return true;
         }
+        return false;
 }
 }
