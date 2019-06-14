@@ -11,6 +11,7 @@ function App() {
 
   function handleUserDataUpdate(newUserData) {
     setUserData(newUserData);
+    setGameOver(newUserData.stats.gameOver);
   }
 
   async function handleNewGameButtonClicked() {
