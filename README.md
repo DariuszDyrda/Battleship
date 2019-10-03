@@ -17,9 +17,11 @@ These instructions will get you a copy of the project up and running on your loc
 
 ```
 cd battleship-api
+npm install
 npm run dev
 
 cd ../battleship-client
+npm install
 npm start
 ```
 
